@@ -1,0 +1,21 @@
+version: "2"
+
+services:
+  web:
+    image: gitlab-authed-server
+    build: .
+    environments:
+      GITLAB_URL: "http://gitlab.example.com"
+      AUTH_SEVER_NAME: auth.example.net
+      AUTH_SEVER_NAME_BASE: ".example.net"
+      AUTH_SEVER_PORT: 8081
+      AUTH_SEVER_COOKIE_SECURE: "false"
+      AUTH_SEVER_COOKIE_SECRET: $(python -c 'import os,base64; print base64.b64encode(os.urandom(16))')
+      AUTH_SEVER_URL: "http://auth.example.net:8081"
+      OAUTH2_CLIENT_ID: "Client ID in your gitlab application"
+      OAUTH2_CLIENT_SECRET: "Client Secret in your gitlab application"
+      # Exec below command before
+      # export COOKIE_SECRET=$(python -c 'import os,base64; print base64.b64encode(os.urandom(16))')
+      AUTH_SEVER_COOKIE_SECRET: "$COOKIE_SECRET"
+      AUTH_SEVER_COOKIE_SECURE: "true"
+

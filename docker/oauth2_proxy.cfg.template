@@ -1,0 +1,25 @@
+## OAuth2 Proxy Config File
+## https://github.com/bitly/oauth2_proxy
+
+provider = "gitlab"
+email_domains = [ "*" ]
+approval_prompt = "auto"
+pass_user_headers = true
+pass_access_token = true
+
+upstreams = [
+  "http://127.0.0.1:8880/"
+]
+
+login_url     = "$GITLAB_URL/oauth/authorize"
+redeem_url    = "$GITLAB_URL/oauth/token"
+validate_url  = "$GITLAB_URL/api/v3/user"
+
+client_id     = "$OAUTH2_CLIENT_ID"
+client_secret = "$OAUTH2_CLIENT_SECRET"
+
+cookie_domain = "$AUTH_SEVER_NAME_BASE"
+cookie_secret = "$AUTH_SEVER_COOKIE_SECRET"
+cookie_secure = "$AUTH_SEVER_COOKIE_SECURE"
+redirect_url  = "$AUTH_SEVER_URL/auth/callback"
+

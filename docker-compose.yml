@@ -18,4 +18,6 @@ services:
       # export COOKIE_SECRET=$(python -c 'import os,base64; print base64.b64encode(os.urandom(16))')
       AUTH_SEVER_COOKIE_SECRET: "$COOKIE_SECRET"
       AUTH_SEVER_COOKIE_SECURE: "true"
+    voluems:
+      - $PWD/pages:/srv/nginx/pages
 

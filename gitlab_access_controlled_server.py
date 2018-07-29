@@ -2,13 +2,11 @@ from logging import basicConfig, getLogger, DEBUG, INFO
 import os, sys, json
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 import SocketServer
-import libsaas_gitlab as gitlab
-import libsaas
+import gitlab
 
 basicConfig(level=DEBUG)
-getLogger('libsaas.executor.urllib2_executor').setLevel(INFO)
+getLogger('urllib3').setLevel(INFO)
 logger = getLogger(__name__)
-
 
 # ---------------------------
 # Gitlab service
@@ -17,22 +15,21 @@ logger = getLogger(__name__)
 class GitlabService(object):
 
   def __init__(self, gitlab_url, oauth2_token):
-    self.service = gitlab.Gitlab(gitlab_url, None, oauth_token=oauth2_token)
+    self.service = gitlab.Gitlab(gitlab_url, oauth_token=oauth2_token)
 
   def find_project(self, project_id):
     try:
-      return self.service.project(project_id).get()
-    except libsaas.http.HTTPError as e:
+      return self.service.projects.get(project_id)
+    except gitlab.exceptions.GitlabGetError as e:
       logger.warn("Failed to find project (project_id=%d): %s", project_id, e)
       return None
-
 
   def can_access_project_repository(self, project_id):
     try:
       # try to get repository
-      self.service.project(project_id).repository().tree()
+      self.service.projects.get(project_id).repository_tree()
       return True
-    except libsaas.http.HTTPError as e:
+    except gitlab.exceptions.GitlabGetError as e:
       logger.warn("Failed to access repository (project_id=%d): %s", project_id, e)
       return False
 

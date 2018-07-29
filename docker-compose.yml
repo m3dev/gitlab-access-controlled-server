@@ -18,4 +18,7 @@ services:
       AUTH_SEVER_COOKIE_SECURE: "true"
     volumes:
       - $PWD/pages:/srv/nginx/pages
+      - $PWD:/app
+    extra_hosts:
+      - "gitlab.example.com:192.168.65.1" #docker.for.mac.localhost"
 

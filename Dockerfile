@@ -13,7 +13,7 @@ RUN curl -sSL https://github.com/bitly/oauth2_proxy/releases/download/v2.2/oauth
   | tar -zxC /usr/local/bin --strip=1
 
 # install python libraries
-RUN pip install libsaas_gitlab
+RUN pip install python-gitlab
 
 COPY docker /app/docker
 RUN ln -s /app/docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf

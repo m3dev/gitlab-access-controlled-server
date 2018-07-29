@@ -14,7 +14,7 @@ http {
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
 
-    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    log_format  main  'nginx $remote_addr - $remote_user [$time_local] "$request" '
                       '$status $body_bytes_sent "$http_referer" '
                       '"$http_user_agent" "$http_x_forwarded_for"';
 
@@ -31,19 +31,20 @@ http {
       server_name ~^(?<sname>.+?)$AUTH_SEVER_NAME_BASE$;
       listen $AUTH_SEVER_PORT;
 
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Scheme $scheme;
+
       location = /oauth2/start {
         proxy_pass http://127.0.0.1:4180/oauth2/start?rd=%2F$http_host$arg_rd;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Scheme $scheme;
+      }
+
+      location /oauth2 {
+        proxy_pass http://127.0.0.1:4180;
       }
 
       location / {
-        proxy_pass       http://127.0.0.1:4180;
-        proxy_set_header Host                    $host;
-        proxy_set_header X-Real-IP               $remote_addr;
-        proxy_set_header X-Scheme                $scheme;
-        proxy_set_header X-Document-Base-Dir     $sname;
+        proxy_pass http://127.0.0.1:4180/$sname$request_uri;
       }
     }
 
